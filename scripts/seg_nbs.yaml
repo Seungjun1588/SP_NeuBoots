@@ -1,0 +1,44 @@
+path:
+  dataset: voc
+  postfix: none
+
+setup:
+  model_type: nbs_seg
+  batch_size: 30
+  cpus: 4
+  gpus: "2"
+  seed: 0
+  num_epoch: 200
+  phase: train
+  epoch_th: 0
+  num_mc: 5
+  n_a: 256
+  adv_training: False
+
+module:
+  model:
+    name: deeplabv3_res50
+    num_classes: 21
+    # dropout_rate: 0.0
+
+  optim:
+    name: SGD
+    lr: 0.001
+    momentum: 0.9
+    nesterov: True
+    weight_decay: 0.0005
+
+  lr_scheduler:
+    name: CosineAnnealingLR
+    T_max: 200
+
+  loss: [NbsLoss]
+  loss_args:
+    NbsLoss:
+      reduction: mean
+  loss_weight: [1.]
+  val_metric: MeanIOU
+  test_metric: MeanIOU
+  metric_args:
+    nlabels: 21
+    reduction: none
