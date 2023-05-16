@@ -12,7 +12,7 @@ setup:
   phase: train
   epoch_th: 0
   num_mc: 5
-  n_a: 2
+  n_a: 1
   adv_training: False
 
 module:

@@ -28,14 +28,14 @@ MODEL_DICT = {'mlp': [None, 'none', 28 * 28 * 3],
               'wresnet28_10': [wresnet28_10, 'avgpool', 640],
               'deeplabv3_res50': [models.resnet.resnet50, 'layer4', 2048],
               'deeplabv3_res101': [models.resnet.resnet101, 'layer4', 2048],
-              'Reg_model': [Reg_model,'none',1]}
+              'Reg_model': [Reg_model,'none',400]}
 
 
 def _get_model(name, model_type, num_classes, dropout_rate=0.):
     backbone, return_layer, in_feat = MODEL_DICT[name]
-    # 
+    backbone = backbone(in_feat)
     if model_type == 'nbs':
-        classifier = NbsCls(in_feat, num_classes)
+        classifier = NbsCls(in_feat, num_classes) # last layer of the model 
         classifier.num_classes = num_classes
     # elif model_type == 'nbs_seg':
     #     classifier = NbsDeepLabHead(in_feat, num_classes)
@@ -47,7 +47,7 @@ def _get_model(name, model_type, num_classes, dropout_rate=0.):
         
     if backbone:
 
-        return ConvNet(backbone, classifier, last_drop=0.0)
+        return ConvNet(backbone, classifier, last_drop=0.0) # Reg_model + last layer 
     else:
         return classifier # self.model in nbs_runner
 
