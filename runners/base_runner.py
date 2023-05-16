@@ -30,7 +30,7 @@ class BaseRunner(object):
 @torch.no_grad()
 def reduce_tensor(tensor, mean=False):
     try:
-        world_size = dist.get_world_size()
+        world_size = 1 # dist.get_world_size()
     except AssertionError:
         world_size = 1
     if world_size < 2:
@@ -45,7 +45,7 @@ def reduce_tensor(tensor, mean=False):
 @torch.no_grad()
 def gather_tensor(tensor):
     try:
-        world_size = dist.get_world_size()
+        world_size = 1 # dist.get_world_size()
     except AssertionError:
         world_size = 1
     if world_size < 2:

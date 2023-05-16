@@ -94,9 +94,10 @@ class NbsRunner(CnnRunner):
             outputs = np.concatenate(outputs, axis=1)
             acc = (outputs.mean(0).argmax(-1) == labels).mean() * 100
             ece = calc_ece(softmax(outputs, -1).mean(0), labels)
-            nll, brier = calc_nll_brier_mc(outputs, labels)
+            # nll, brier = calc_nll_brier_mc(outputs, labels)
+            # print("Becarful, the num_class set as 1")
             log = f"[Test] ACC: {acc:.2f}, ECE : {ece:.2f}, "
-            log += f"NLL : {nll:.2f}, Brier : {brier:.2f}"
+            # log += f"NLL : {nll:.2f}, Brier : {brier:.2f}"
             self.log(log, 'info')
             with h5py.File(f"{self.model_path}/output.h5", 'w') as h:
                 h.create_dataset('output', data=outputs)

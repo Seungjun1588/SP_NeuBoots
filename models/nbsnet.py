@@ -23,7 +23,7 @@ class NbsCls(nn.Module):
                 res_[i] += res
             return res_
         else:
-            out2 = torch.exp(-F.interpolate(alpha[:, None], self.in_feat))[:, 0]
+            out2 = torch.exp(-F.interpolate(alpha[:, None], self.in_feat))[:, 0].cuda()
             return self.fc_out(out1 * out2)
 
 
