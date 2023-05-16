@@ -37,10 +37,10 @@ class ConvNet(nn.Module):
     def forward(self, *x):
         x = list(x)
         out = self.backbone(x[0]) # x[0] : batch size x_train, x[1] : batch size y_train 
-        if out.size(-1) != 1:
-            out = F.relu(out, inplace=True).mean([2, 3])
-        else:
-            out = out.squeeze()
+        # if out.size(-1) != 1:
+        #     out = F.relu(out, inplace=True).mean([2, 3])
+        # else:
+        #     out = out.squeeze()
         out = self.dropout(out)
         x[0] = out
         return self.classifer(*x)
