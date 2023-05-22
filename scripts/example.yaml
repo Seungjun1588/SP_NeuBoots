@@ -32,10 +32,10 @@ module:
     name: CosineAnnealingLR
     T_max: 200
 
-  loss: [NbsLoss]
+  loss: [Accuracy]
   loss_args:
-    NbsLoss:
-      reduction: mean
+    nlabels: 5 
+    reduction: mean 
   loss_weight: [1.]
   val_metric: Accuracy
   test_metric: Accuracy

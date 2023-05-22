@@ -99,7 +99,7 @@ class Argments(object):
         #                                      world_size=world_size,
         #                                      rank=self['setup/local_rank'])
         self['setup/rank'] = self['setup/local_rank']
-        self['setup/dist_size'] = 0 # dist.get_world_size()
+        self['setup/dist_size'] = 1 # dist.get_world_size()
 
         ############## <- here
         self._modules_load()
