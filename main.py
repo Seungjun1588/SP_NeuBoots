@@ -42,6 +42,7 @@ def main():
         if 'seg' in model_type: # segment task
             is_seg = True
             _data_loader = NbsDataLoaderSeg # n_a exists
+            
         else: # this part is the core of the paper
             _data_loader = NbsDataLoaderRgs # n_a exists
         data_loader = _data_loader(dataset, setup['batch_size'],
@@ -50,22 +51,22 @@ def main():
                             logger=logger, model_path=model_path, rank=setup['rank'],
                             epoch_th=setup['epoch_th'], num_mc=setup['num_mc'],
                             adv_training=setup['adv_training'])
-    else:
-        if 'seg' in model_type:
-            is_seg = True
-            _data_loader = GeneralDataLoaderSeg # nothing
-        else:
-            _data_loader = GeneralDataLoaderCls # no n_a
-        data_loader = _data_loader(dataset, setup['batch_size'],
-                                   setup['cpus'], setup['seed'])
-        if 'mcd' in model_type: # mcd ?? num_mc ? 
-            runner = McdRunner(data_loader, **arg.module, num_epoch=setup['num_epoch'],
-                               logger=logger, model_path=model_path, rank=setup['rank'],
-                               num_mc=setup['num_mc'], adv_training=setup['adv_training'])
-        else:
-            runner = CnnRunner(data_loader, **arg.module, num_epoch=setup['num_epoch'],
-                            logger=logger, model_path=model_path, rank=setup['rank'],
-                            adv_training=setup['adv_training'])
+    # else:
+    #     if 'seg' in model_type:
+    #         is_seg = True
+    #         _data_loader = GeneralDataLoaderSeg # nothing
+    #     else:
+    #         _data_loader = GeneralDataLoaderCls # no n_a
+    #     data_loader = _data_loader(dataset, setup['batch_size'],
+    #                                setup['cpus'], setup['seed'])
+    #     if 'mcd' in model_type: # mcd ?? num_mc ? 
+    #         runner = McdRunner(data_loader, **arg.module, num_epoch=setup['num_epoch'],
+    #                            logger=logger, model_path=model_path, rank=setup['rank'],
+    #                            num_mc=setup['num_mc'], adv_training=setup['adv_training'])
+    #     else:
+    #         runner = CnnRunner(data_loader, **arg.module, num_epoch=setup['num_epoch'],
+    #                         logger=logger, model_path=model_path, rank=setup['rank'],
+    #                         adv_training=setup['adv_training'])
 
     if setup['phase'] == 'train':
         runner.train() 

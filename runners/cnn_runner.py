@@ -55,14 +55,15 @@ class CnnRunner(BaseRunner):
         return img_new.cpu().detach()
 
     def _train_a_batch(self, batch):
-        if self.adv_training: # what is this..? ignore
-            img_new = self.fgsm(*batch)
-            batch[0] = img_new
+        # if self.adv_training: # what is this..? ignore
+        #     img_new = self.fgsm(*batch)
+        #     batch[0] = img_new
+        #-------------------------------------------------#
         loss = self._calc_loss(*batch)
         self.optim.zero_grad()
         loss.backward()
         self.optim.step()
-
+        #-------------------------------------------------#
         _loss = reduce_tensor(loss, True).item()
         return _loss
 

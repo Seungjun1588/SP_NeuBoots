@@ -7,6 +7,19 @@ from collections import OrderedDict
 
 
 class NbsCls(nn.Module):
+    '''
+    앞에서 사용한 모델 뒤에 추가적으로 붙이는 layer를 정의한 부분.
+    여기서 randomness가 들어가서 output의 결과를 다양하게 만든다.
+
+    in_feat : input feature size
+    num_classes : output feature size
+    x : 앞에서 사용한 모델의  output
+    
+
+    forward func : 
+        alpha가 int인 경우, rand_like로 randomness 만들어서 x에 곱해서 결과를 내보낸다.
+        아닌 경우 다른 방식으로 결과를 내보낸다. 
+    '''
     def __init__(self, in_feat, num_classes):
         super().__init__()
         self.in_feat = in_feat

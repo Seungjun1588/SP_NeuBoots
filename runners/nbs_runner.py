@@ -50,9 +50,9 @@ class NbsRunner(CnnRunner):
     def _valid_a_batch(self, img, label, with_output=False):
         self._update_weight()
         self.model.eval()
-        output = self.model(img.cuda(non_blocking=True), self.num_mc)
+        output = self.model(img.cuda(non_blocking=True), self.num_mc) # output -> (num_mc,batch_size,1) mc : motecarlo sampling ?
         label = label.cuda(non_blocking=True)
-        result = self.val_metric(output.mean(0), label)
+        result = self.val_metric(output.mean(0), label) 
         if with_output:
             result = [result, output]
         return result

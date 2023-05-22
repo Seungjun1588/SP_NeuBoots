@@ -45,7 +45,7 @@ def _get_model(name, model_type, num_classes, dropout_rate=0.):
     #     classifier = torch.nn.Linear(in_feat, num_classes)
     #     classifier.num_classes = num_classes
         
-    if backbone:
+    if backbone: 
 
         return ConvNet(backbone, classifier, last_drop=0.0) # Reg_model + last layer 
     else:

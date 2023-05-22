@@ -8,10 +8,10 @@ setup:
   cpus: 1
   gpus: "0"
   seed: 0
-  num_epoch: 2
+  num_epoch: 200
   phase: train
   epoch_th: 0
-  num_mc: 5
+  num_mc: 5 # ?
   n_a: 1
   adv_training: False
 
@@ -39,6 +39,6 @@ module:
   loss_weight: [1.]
   val_metric: Accuracy
   test_metric: Accuracy
-  metric_args:
-    nlabels: 10
-    reduction: none
+  metric_args: # metric의 옵션 함수는 metrics.py에 정의되어 있다. 
+    nlabels: 5 
+    reduction: mean 
