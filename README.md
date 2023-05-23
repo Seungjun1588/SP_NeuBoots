@@ -1,6 +1,6 @@
 # SP_NeuBoots
 
-~**일반적인 linear regression에서의 성능을 1차적으로 확인하고 있음.**~
+~**일반적인 linear regression에서의 성능을 1차적으로 확인하고 있음.**~  
 **이제 nonlinear regression 혹은 다른 regression에서 성능을 확인해보기**
 --- 
   
