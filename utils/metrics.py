@@ -11,7 +11,7 @@ class NbsLoss(torch.nn.Module):
         # self.base_loss = torch.nn.MSELoss(reduction=reduction)
         self.reduction = reduction
     def forward(self, input, target, w=None):
-        out = torch.sqrt((input - target)**2)  #self.base_loss(input, target)
+        out = (input - target)**2 #self.base_loss(input, target)
         if w is not None:
             out = out * w
         if self.reduction == 'mean':

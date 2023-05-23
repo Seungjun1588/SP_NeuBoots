@@ -23,7 +23,7 @@ class CnnRunner(BaseRunner):
         self.test_metric = test_metric
         self.optim = optim
         self.lr_scheduler = lr_scheduler
-        self.best_score = 0.
+        self.best_score = 100000.
         self.save_kwargs = {}
         self.world_size = 0 # torch.distributed.get_world_size()
         super().__init__(loader, model, logger, model_path, rank)
@@ -170,7 +170,7 @@ class CnnRunner(BaseRunner):
                     "lr_schdlr": self.lr_scheduler.state_dict(),
                     **kwargs}, f"{self.model_path}/{file_name}.pth")
 
-        cond = metric >= self.best_score
+        cond = metric <= self.best_score # depends on the metric
         if cond:
             self.log(f"{self.best_score} -------------------> {metric}", 'debug')
             self.best_score = metric

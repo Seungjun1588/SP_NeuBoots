@@ -50,7 +50,7 @@ class NbsRunner(CnnRunner):
     def _valid_a_batch(self, img, label, with_output=False):
         self._update_weight()
         self.model.eval()
-        output = self.model(img.cuda(non_blocking=True), self.num_mc) # output -> (num_mc,batch_size,1) mc : motecarlo sampling ?
+        output = self.model(img.cuda(non_blocking=True), self.num_mc) # output -> (num_mc,batch_size,1) mc : montecarlo sampling ?
         label = label.cuda(non_blocking=True)
         result = self.val_metric(output.mean(0), label) 
         if with_output:
@@ -96,9 +96,11 @@ class NbsRunner(CnnRunner):
             ece = calc_ece(softmax(outputs, -1).mean(0), labels)
             # nll, brier = calc_nll_brier_mc(outputs, labels)
             # print("Becarful, the num_class set as 1")
-            log = f"[Test] ACC: {acc:.2f}, ECE : {ece:.2f}, "
+            log = f"[Test] loss: {acc:.5f}, ECE : {ece:.2f}, "
             # log += f"NLL : {nll:.2f}, Brier : {brier:.2f}"
             self.log(log, 'info')
             with h5py.File(f"{self.model_path}/output.h5", 'w') as h:
                 h.create_dataset('output', data=outputs)
                 h.create_dataset('label', data=labels)
+    
+
