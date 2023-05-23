@@ -69,9 +69,11 @@ def main():
     #                         adv_training=setup['adv_training'])
 
     if setup['phase'] == 'train':
+        print("train_time")
         runner.train() 
         runner.test(is_seg) 
     elif setup['phase'] == 'test':
+        print("test_time ")
         runner.test(is_seg)
 
 

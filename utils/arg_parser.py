@@ -48,10 +48,11 @@ class Argments(object):
 
                     module['lr_scheduler'] = self._module_load(v, part='lr_scheduler',
                                                                optimizer=module['optim'])
-                    loss = [eval(l)(**v['loss_args'][l]) for l in v['loss']]
+                    # loss = [eval(l)(**v['loss_args'][l]) for l in v['loss']]
+                    loss = [eval(v['loss'])(**v['loss_args'])]
                     # print(loss) # [CrossEntropyLoss()]
                     # print(module['loss_with_weight']) # [(CrossEntropyLoss(), 1.0)]
-                    module['loss_with_weight'] = list(zip(loss, v['loss_weight']))
+                    module['loss_with_weight'] = list(zip(loss,v['loss_weight']))   # list(zip(loss, v['loss_weight']))
                     module['val_metric'] = eval(v['val_metric'])(**v['metric_args'])
                     module['test_metric'] = eval(v['test_metric'])(**v['metric_args'])
                 else:

@@ -6,14 +6,12 @@ from scipy.special import softmax
 
 
 class NbsLoss(torch.nn.Module):
-    def __init__(self, reduction='mean',
-                 base_loss=torch.nn.CrossEntropyLoss(reduction='none')):
+    def __init__(self, reduction='mean'):
         super().__init__()
+        # self.base_loss = torch.nn.MSELoss(reduction=reduction)
         self.reduction = reduction
-        self.base_loss = base_loss
-
     def forward(self, input, target, w=None):
-        out = self.base_loss(input, target)
+        out = torch.sqrt((input - target)**2)  #self.base_loss(input, target)
         if w is not None:
             out = out * w
         if self.reduction == 'mean':

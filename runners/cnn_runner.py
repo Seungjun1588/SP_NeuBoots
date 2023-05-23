@@ -29,30 +29,30 @@ class CnnRunner(BaseRunner):
         super().__init__(loader, model, logger, model_path, rank)
         self.load()
 
-    def _calc_loss(self, img, label):
-        self.model.train()
-        output = self.model(img.cuda(non_blocking=True))
-        label = label.cuda(non_blocking=True)
-        loss_ = 0
-        for loss, w in self.loss_with_weight:
-            _loss = w * loss(output, label)
-            loss_ += _loss
-        return loss_
+    # def _calc_loss(self, img, label):
+    #     self.model.train()
+    #     output = self.model(img.cuda(non_blocking=True))
+    #     label = label.cuda(non_blocking=True)
+    #     loss_ = 0
+    #     for loss, w in self.loss_with_weight:
+    #         _loss = w * loss(output, label)
+    #         loss_ += _loss
+    #     return loss_
 
-    def fgsm(self, img, label):
-        step_size = 0.01
-        # loss_fn = torch.nn.CrossEntropyLoss()
-        loss_fn = self.loss_with_weight[0][0] # loss function
-        img = img.cuda()
-        img.requires_grad = True
-        self.model.eval()
-        self.model.zero_grad()
-        output = self.model(img)
-        loss = loss_fn(output, label.cuda())
-        loss.backward()
-        grad_sign = img.grad.sign()
-        img_new = img + step_size * grad_sign
-        return img_new.cpu().detach()
+    # def fgsm(self, img, label):
+    #     step_size = 0.01
+    #     # loss_fn = torch.nn.CrossEntropyLoss()
+    #     loss_fn = self.loss_with_weight[0][0] # loss function
+    #     img = img.cuda()
+    #     img.requires_grad = True
+    #     self.model.eval()
+    #     self.model.zero_grad()
+    #     output = self.model(img)
+    #     loss = loss_fn(output, label.cuda())
+    #     loss.backward()
+    #     grad_sign = img.grad.sign()
+    #     img_new = img + step_size * grad_sign
+    #     return img_new.cpu().detach()
 
     def _train_a_batch(self, batch):
         # if self.adv_training: # what is this..? ignore
@@ -88,7 +88,7 @@ class CnnRunner(BaseRunner):
                 t_iter = loader
             losses = 0
             times = []
-            for i, batch in enumerate(t_iter):
+            for i, batch in enumerate(t_iter): # batch  : (trainX,trainY,idx) idx ?
                 t = time()
                 loss = self._train_a_batch(batch) # update the params.
                 times += [time() - t]
@@ -109,11 +109,11 @@ class CnnRunner(BaseRunner):
         self.model.eval()
         for batch in v_iter:
             _metric = self._valid_a_batch(*batch, with_output=False)
-            metrics += [gather_tensor(_metric).cpu().numpy()]
-        acc = np.concatenate(metrics).mean()
-        self.log(f"[Val] {epoch} Score: {acc}", 'info')
+            metrics += [gather_tensor(_metric).cpu().item()] # cpu().numpy
+        LOSS = sum(metrics)/len(metrics) # acc = np.concatenate(metrics).mean()
+        self.log(f"[Val] {epoch} Score: {LOSS}", 'info')
         if self.rank == 0:
-            self.save(epoch, acc, **self.save_kwargs)
+            self.save(epoch, LOSS, **self.save_kwargs)
 
     def test(self, is_seg):
         self.load('model.pth')

@@ -31,9 +31,9 @@ class NbsRunner(CnnRunner):
         if self.epoch > self.epoch_th:
             self.alpha = Exponential(torch.ones([1, self.n_a])).sample() # sampling the variables following dirichlet dist. 
 
-    def _calc_loss(self, img, label, idx): # theses options in batch
+    def _calc_loss(self, img, label, idx): # these options in batch
         n0 = img.size(0)
-        w = self.alpha[0, idx].cuda()
+        w = self.alpha[0, idx].cuda() # should be the iterative same values.
 
         output = self.model(img.cuda(non_blocking=True),
                             self.alpha.repeat_interleave(n0, 0))

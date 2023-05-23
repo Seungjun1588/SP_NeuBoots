@@ -4,15 +4,15 @@ path:
 
 setup:
   model_type: nbs
-  batch_size: 20
-  cpus: 1
+  batch_size: 10
+  cpus: 2
   gpus: "0"
   seed: 0
-  num_epoch: 200
+  num_epoch: 30
   phase: train
-  epoch_th: 0
-  num_mc: 5 # ?
-  n_a: 1
+  epoch_th: -1
+  num_mc: 20 
+  n_a: 10
   adv_training: False
 
 module:
@@ -23,7 +23,7 @@ module:
 
   optim:
     name: SGD
-    lr: 0.05
+    lr: 0.005
     momentum: 0.9
     nesterov: True
     weight_decay: 0.001
@@ -32,13 +32,11 @@ module:
     name: CosineAnnealingLR
     T_max: 200
 
-  loss: [Accuracy]
+  loss: NbsLoss
   loss_args:
-    nlabels: 5 
     reduction: mean 
   loss_weight: [1.]
-  val_metric: Accuracy
-  test_metric: Accuracy
-  metric_args: # metric의 옵션 함수는 metrics.py에 정의되어 있다. 
-    nlabels: 5 
+  val_metric: NbsLoss
+  test_metric: NbsLoss
+  metric_args:
     reduction: mean 
