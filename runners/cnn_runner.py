@@ -111,7 +111,7 @@ class CnnRunner(BaseRunner):
             _metric = self._valid_a_batch(*batch, with_output=False)
             metrics += [gather_tensor(_metric).cpu().item()] # cpu().numpy
         LOSS = sum(metrics)/len(metrics) # acc = np.concatenate(metrics).mean()
-        self.log(f"[Val] {epoch} Score: {LOSS}", 'info')
+        self.log(f"[Val] {epoch} loss: {LOSS}", 'info')
         if self.rank == 0:
             self.save(epoch, LOSS, **self.save_kwargs)
 

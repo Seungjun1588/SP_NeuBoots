@@ -53,7 +53,7 @@ class Argments(object):
                     # print(loss) # [CrossEntropyLoss()]
                     # print(module['loss_with_weight']) # [(CrossEntropyLoss(), 1.0)]
                     module['loss_with_weight'] = list(zip(loss,v['loss_weight']))   # list(zip(loss, v['loss_weight']))
-                    module['val_metric'] = eval(v['val_metric'])(**v['metric_args'])
+                    module['val_metric'] = eval(v['val_metric'])(**v['metric_args'])  
                     module['test_metric'] = eval(v['test_metric'])(**v['metric_args'])
                 else:
                     pass

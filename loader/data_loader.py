@@ -147,14 +147,14 @@ class BaseDataLoader(object):
                 ", cifar100, svhn, svhn_extra, stl, voc]")
         
     def _load_custom(self):
-        n_train= 10000
+        n_train= 100000
         n_test = 2000
         # true beta
-        beta = torch.ones([400,1])
+        beta = torch.ones([100,1])
         # mean 5, std 2
-        train_X = torch.normal(5,2,size=(n_train,400))
+        train_X = torch.normal(0,1,size=(n_train,100))
         train_y = torch.mm(train_X,beta)
-        test_X = torch.normal(5,2,size=(n_test,400))
+        test_X = torch.normal(0,1,size=(n_test,100))
         test_y = torch.mm(test_X,beta)
         trainset = CustomDataset(train_X,train_y)
         testset = CustomDataset(test_X,test_y)

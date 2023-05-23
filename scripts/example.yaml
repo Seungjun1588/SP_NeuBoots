@@ -8,7 +8,7 @@ setup:
   cpus: 2
   gpus: "0"
   seed: 0
-  num_epoch: 30
+  num_epoch: 40
   phase: train
   epoch_th: -1
   num_mc: 20 
@@ -23,7 +23,7 @@ module:
 
   optim:
     name: SGD
-    lr: 0.005
+    lr: 0.0005
     momentum: 0.9
     nesterov: True
     weight_decay: 0.001
