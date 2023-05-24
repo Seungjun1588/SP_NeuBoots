@@ -46,6 +46,7 @@ test_y = torch.mm(test_X,beta)
 
 ---
 - yaml 파일 세팅
+
 ```python
 path:
   dataset: custom
@@ -53,26 +54,26 @@ path:
 
 setup:
   model_type: nbs
-  batch_size: 20
-  cpus: 1
+  batch_size: 100
+  cpus: 2
   gpus: "0"
   seed: 0
-  num_epoch: 200
+  num_epoch: 20
   phase: train
-  epoch_th: 0
-  num_mc: 5 # ?
-  n_a: 1
+  epoch_th: -1
+  num_mc: 20 
+  n_a: 100
   adv_training: False
 
 module:
   model:
     name: Reg_model
     num_classes: 1
-    dropout_rate: 0.0
+    dropout_rate: 0.
 
   optim:
     name: SGD
-    lr: 0.05
+    lr: 0.0005
     momentum: 0.9
     nesterov: True
     weight_decay: 0.001
@@ -81,14 +82,12 @@ module:
     name: CosineAnnealingLR
     T_max: 200
 
-  loss: [NbsLoss]
+  loss: NbsLoss
   loss_args:
-    NbsLoss:
-      reduction: mean
+    reduction: mean 
   loss_weight: [1.]
-  val_metric: Accuracy
-  test_metric: Accuracy
+  val_metric: NbsLoss
+  test_metric: NbsLoss
   metric_args:
-    nlabels: 1
     reduction: mean 
 ```
