@@ -10,7 +10,7 @@ from .densenet_ca import dense_bc
 from .nbsnet import get_conv, NbsCls,ConvNet
 from .deeplabv3 import NbsDeepLabHead, GeneralDeepLabHead
 from .wideresnet import wresnet28_2, wresnet28_10, wresnet16_8
-from .regression import Reg_model
+from .regression import *
 
 MODEL_DICT = {'mlp': [None, 'none', 28 * 28 * 3],
               'alexnet': [models.alexnet, 'avgpool', 256 * 6 * 6],
@@ -28,7 +28,8 @@ MODEL_DICT = {'mlp': [None, 'none', 28 * 28 * 3],
               'wresnet28_10': [wresnet28_10, 'avgpool', 640],
               'deeplabv3_res50': [models.resnet.resnet50, 'layer4', 2048],
               'deeplabv3_res101': [models.resnet.resnet101, 'layer4', 2048],
-              'Reg_model': [Reg_model,'none',100]}
+              'Reg_model': [Reg_model,'none',100],
+              'Reg_model2': [Reg_model2,'none',1]}
 
 
 def _get_model(name, model_type, num_classes, dropout_rate=0.):

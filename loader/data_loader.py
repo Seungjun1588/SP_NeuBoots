@@ -137,7 +137,8 @@ class BaseDataLoader(object):
               'svhn_extra': lambda: self._load_svhn(use_extra=True),
               'stl': lambda: self._load_stl(),
               'voc': lambda: self._load_voc(),
-              'custom' : lambda: self._load_custom()}
+              'custom' : lambda: self._load_custom(),
+              'custom2' : lambda: self._load_custom2()}
         try:
             _dataset = _d[dataset]()
             return _dataset
@@ -156,6 +157,47 @@ class BaseDataLoader(object):
         train_y = torch.mm(train_X,beta)
         test_X = torch.normal(0,1,size=(n_test,100))
         test_y = torch.mm(test_X,beta)
+        trainset = CustomDataset(train_X,train_y)
+        testset = CustomDataset(test_X,test_y)
+        print(train_X.size())
+        print(train_y.size())
+        return {'train': trainset, 'test': testset}
+
+    def _load_custom2(self):
+        n_train= 1000
+        n_test = 200
+
+        train_step =0.004
+        test_step = 0.02
+        start = -2
+        end = -start
+
+        train_X = torch.arange(start,end,train_step)
+        train_sd = torch.sqrt(train_X**2 + 1e-05)
+        train_y = torch.normal(torch.zeros(train_X.shape[0]),train_sd)
+
+        test_X = torch.arange(start,end,test_step)
+        test_sd = torch.sqrt(test_X**2 + 1e-05)
+        test_y = torch.normal(torch.zeros(test_X.shape[0]),test_sd)
+
+        train_X = train_X.unsqueeze(1)
+        train_y = train_y.unsqueeze(1)
+        test_X = test_X.unsqueeze(1)
+        test_y = test_y.unsqueeze(1)
+
+        # y = torch.normal(torch.zeros(X.shape[0]),sd)
+        # train_idx = torch.randint(0,100,(n_train,))
+        # train_X = X[train_idx].unsqueeze(1)
+        # train_y = y[train_idx].unsqueeze(1)
+
+        # test_idx = torch.randint(0,100,(n_test,))
+        # test_X = X[test_idx].unsqueeze(1)
+        # test_y = y[test_idx].unsqueeze(1)
+        
+        # normalize
+        train_X = (train_X - train_X.mean())/train_X.std()
+        test_X = (test_X - test_X.mean())/test_X.std()
+
         trainset = CustomDataset(train_X,train_y)
         testset = CustomDataset(test_X,test_y)
         print(train_X.size())
