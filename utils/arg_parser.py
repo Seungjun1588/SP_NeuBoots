@@ -40,7 +40,6 @@ class Argments(object):
             if 'module' in k:
                 setattr(self, k, dict())
                 module = self.__dict__[k]
-                ############## <- here
                 module['model'] = _get_model(**v['model'], model_type=self['setup/model_type']).cuda()
                 if self['setup/phase'] != 'infer': # mean train?
                     module['optim'] = self._module_load(v, part='optim',
@@ -102,7 +101,6 @@ class Argments(object):
         self['setup/rank'] = self['setup/local_rank']
         self['setup/dist_size'] = 1 # dist.get_world_size()
 
-        ############## <- here
         self._modules_load()
 
     def reset(self):

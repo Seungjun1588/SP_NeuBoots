@@ -37,11 +37,9 @@ def _get_split_indices_cls(trainset, p, seed):
 
 def _get_split_indices_rgs(trainset, p, seed):
     length = len(trainset)
-    print("here3")
     indices = list(range(length))
     random.Random(seed).shuffle(indices)
     sep = int(length * p)
-    print("here4")
     return indices[sep:], indices[:sep]
 
 
@@ -88,9 +86,7 @@ class BaseDataLoader(object):
     def __init__(self, dataset, batch_size, cpus, with_index, seed, val_splitter):
         self.with_index = with_index
         self.dataset = self._get_dataset(dataset) # need to add custom dataset
-        print("here1")
         self.split_indices = val_splitter(self.dataset['train'], 0.1, seed)
-        print("here2")
         self.n_train = len(self.split_indices[0]) # length of the train idx
         self.n_val = len(self.split_indices[1]) # length of the validation idx
         self.n_test = len(self.dataset['test'])
@@ -138,7 +134,9 @@ class BaseDataLoader(object):
               'stl': lambda: self._load_stl(),
               'voc': lambda: self._load_voc(),
               'custom' : lambda: self._load_custom(),
-              'custom2' : lambda: self._load_custom2()}
+              'custom2' : lambda: self._load_custom2(),
+              'custom3' : lambda: self._load_custom3(),
+              'sin' : lambda: self._load_sin()}
         try:
             _dataset = _d[dataset]()
             return _dataset
@@ -148,6 +146,11 @@ class BaseDataLoader(object):
                 ", cifar100, svhn, svhn_extra, stl, voc]")
         
     def _load_custom(self):
+        '''
+        y =bx
+        일반적인 linear regression을 가정하고 만든 데이터셋
+        이미 noramlize되어 있으므로 따로 하지 않았다.
+        '''
         n_train= 100000
         n_test = 2000
         # true beta
@@ -164,6 +167,11 @@ class BaseDataLoader(object):
         return {'train': trainset, 'test': testset}
 
     def _load_custom2(self):
+        '''
+        y = e(x) , e(x) ~ N(0,sqrt(x**2 + 1e-5))
+        non-linear regresssion을 위한 데이터셋
+        해본 결과 거의 mean만 예측하는 결과를 만들었다.
+        '''
         n_train= 1000
         n_test = 200
 
@@ -204,6 +212,71 @@ class BaseDataLoader(object):
         print(train_y.size())
         return {'train': trainset, 'test': testset}
 
+    def _load_custom3(self):
+        '''
+        y = x + e(x) , e(x) ~ N(0,sqrt(x**2 + 1e-5))
+        non-linear 이면서 y의 평균을 0이 아니게 만들어본 데이터셋
+        '''
+        n_train= 100000
+        n_test = 2000
+
+        train_step =0.004
+        test_step = 0.02
+        start = -2
+        end = -start
+
+        train_X = torch.normal(torch.tensor(0),torch.tensor(1),(n_train,))
+        train_sd = torch.sqrt(train_X**2 + 1e-05)
+        train_y = train_X + torch.normal(torch.zeros(train_X.shape[0]),train_sd)
+
+        test_X = torch.normal(torch.tensor(0),torch.tensor(1),(n_test,))
+        test_sd = torch.sqrt(test_X**2 + 1e-05)
+        test_y = test_X + torch.normal(torch.zeros(test_X.shape[0]),test_sd)
+
+        train_X = train_X.unsqueeze(1)
+        train_y = train_y.unsqueeze(1)
+        test_X = test_X.unsqueeze(1)
+        test_y = test_y.unsqueeze(1)
+        
+        # normalize
+        train_X = (train_X - train_X.mean())/train_X.std()
+        test_X = (test_X - test_X.mean())/test_X.std()
+
+        trainset = CustomDataset(train_X,train_y)
+        testset = CustomDataset(test_X,test_y)
+        print(train_X.size())
+        print(train_y.size())
+        return {'train': trainset, 'test': testset}
+    
+    def _load_sin(self):
+        '''
+        y = x + e(x) , e(x) ~ N(0,sqrt(x**2 + 1e-5))
+        non-linear 이면서 y의 평균을 0이 아니게 만들어본 데이터셋
+        '''
+        n_train= 100000
+        n_test = 2000
+
+        train_X = torch.normal(0,2,(n_train,))   # (torch.rand((n_train,))-0.5)*5
+        train_y = 3. + torch.sin(train_X) + torch.randn(n_train)*0.05
+        test_X = torch.normal(0,2,(n_test,)) # (torch.rand((n_test,))-0.5)*5
+        test_y = 3. + torch.sin(test_X) + torch.randn(n_test)*0.05
+
+        train_X = train_X.unsqueeze(1)
+        train_y = train_y.unsqueeze(1)
+        test_X = test_X.unsqueeze(1)
+        test_y = test_y.unsqueeze(1)
+        
+        # normalize
+        train_X = (train_X - train_X.mean())/train_X.std()
+        test_X = (test_X - test_X.mean())/test_X.std()
+
+        trainset = CustomDataset(train_X,train_y)
+        testset = CustomDataset(test_X,test_y)
+        print(train_X.size())
+        print(train_y.size())
+        return {'train': trainset, 'test': testset}
+    
+    
     def _load_mnist(self):
         # trainset = Dataset(MNIST(root='.mnist', train=True, download=True,
                         #    transform=MnistNorm()), with_index=self.with_index)

@@ -1,0 +1,42 @@
+path:
+  dataset: custom3
+  postfix: "train"
+
+setup:
+  model_type: nbs
+  batch_size: 10
+  cpus: 2
+  gpus: "0"
+  seed: 0
+  num_epoch: 20
+  phase: train
+  epoch_th: -1
+  num_mc: 20 
+  n_a: 10
+  adv_training: False
+
+module:
+  model:
+    name: Reg_model2
+    num_classes: 1
+    dropout_rate: 0.
+
+  optim:
+    name: SGD
+    lr: 0.0005
+    momentum: 0.9
+    nesterov: True
+    weight_decay: 0.001
+
+  lr_scheduler:
+    name: CosineAnnealingLR
+    T_max: 200
+
+  loss: NbsLoss
+  loss_args:
+    reduction: mean 
+  loss_weight: [1.]
+  val_metric: NbsLoss
+  test_metric: NbsLoss
+  metric_args:
+    reduction: mean 

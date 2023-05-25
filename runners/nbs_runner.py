@@ -66,41 +66,25 @@ class NbsRunner(CnnRunner):
             t_iter = loader
 
         outputs = []
-        labels = []
         metrics = []
+        inputs = []
+        labels = []
+
         self.model.eval()
         for img, label in t_iter:
             _metric, output = self._valid_a_batch(img, label, with_output=True)
-            labels += [gather_tensor(label).cpu().numpy()]
-            outputs += [gather_tensor(output).cpu().numpy()]
-            metrics += [gather_tensor(_metric).cpu().numpy()]
-        if is_seg:
-            met = np.concatenate(metrics).mean()
-            self.log(f"[Test] MeanIOU: {met:.2f}", 'info')
-            save_path = Path(self.model_path) / 'infer'
-            save_path.mkdir(parents=True, exist_ok=True)
-            index = 0
-            for out, label in zip(outputs, labels):
-                for i in range(label.shape[0]):
-                    l = label[i]
-                    o = out[:, i]
+            inputs += img.squeeze().tolist()
+            outputs += output.cpu().mean(0).squeeze().tolist() # gather_tensor(output).cpu().numpy()
+            metrics += [_metric.cpu().item()] # gather_tensor(_metric).cpu().numpy()
+            labels += label.cpu().squeeze().tolist()
 
-                    with h5py.File(f"{save_path}/{index}.h5", 'w') as h:
-                        h.create_dataset('output', data=o)
-                        h.create_dataset('label', data=l)
-                    index += 1
-        else:
-            labels = np.concatenate(labels)
-            outputs = np.concatenate(outputs, axis=1)
-            acc = (outputs.mean(0).argmax(-1) == labels).mean() * 100
-            ece = calc_ece(softmax(outputs, -1).mean(0), labels)
-            # nll, brier = calc_nll_brier_mc(outputs, labels)
-            # print("Becarful, the num_class set as 1")
-            log = f"[Test] loss: {acc:.5f}, ECE : {ece:.2f}, "
-            # log += f"NLL : {nll:.2f}, Brier : {brier:.2f}"
-            self.log(log, 'info')
-            with h5py.File(f"{self.model_path}/output.h5", 'w') as h:
-                h.create_dataset('output', data=outputs)
-                h.create_dataset('label', data=labels)
-    
+
+
+        err = np.mean(metrics[:])
+        log = f"[Test] loss: {err:.5f} "
+        self.log(log, 'info')
+        with h5py.File(f"{self.model_path}/output.h5", 'w') as h:
+            h.create_dataset('output', data=outputs)
+            h.create_dataset('label', data=labels)
+
 

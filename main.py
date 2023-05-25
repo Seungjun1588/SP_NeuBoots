@@ -19,9 +19,8 @@ def main():
     argparser.add_argument("--gpus", default="0", type=str)
     argparser.add_argument("--local_rank", default=0, type=int) # meaning ? logger level?
     # save 
-    cmd_args = argparser.parse_args(["example2"])
+    cmd_args = argparser.parse_args(["example_sin"])
 
-    ###################### <- here
     # local_rank : specified in yaml file
     # rank : same as local_rank(from dist ~)
 
