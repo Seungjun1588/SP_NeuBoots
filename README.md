@@ -10,6 +10,9 @@
   - 일반적인 regression 을 해서 결과를 살펴보고 paper에서 제시된 방법론으로 했을 때와 차이를 살펴보자. 
   - 일반적인 regression에서 y에 대한 분포의 parameter estimation을 시도해보고 결과를 보자. 
   - ~결과는 문제없는데, log에 TEST loss가 여전히 이상하게 나온다. 함수 정의한 부분 한번 더 확인하기.~
+  - linear regression 예제를 만드는데 부족한 부분이 있었는데, 좋은 참고자료를 찾았다. 아래의 링크를 참고해서 보충해보자. 
+    -   https://github.com/deepmind/neural-processes
+  - attention base 모델로 구현할 때, 시공간 상관관계를 같이 고려해서 estimation이 가능하도록 만들 수 있지 않을까?
 
 - 더 확인해야할 부분
   - 아무리 봐도 validation 할 때는 dirichlet가 아니라 그냥 rand_like 함수를 사용하고 있는 것으로 보인다. 확인해보자. 
