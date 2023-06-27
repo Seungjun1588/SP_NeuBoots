@@ -4,9 +4,10 @@
 **이제 nonlinear regression 혹은 다른 regression에서 성능을 확인해보기**
 --- 
 - **방향성**
-  -   이론적인 bootstrap과의 차이점을 생각해보자.
-  -   point reference data를 시뮬레이션 하고(GP), 이를 baysian krigging 했을 때, ML로 krigging 했을 떄, NeuBoots를 이용해서 했을 때를 실험적으로 비교하자.
-  -   NeuBoots를 이용할 때는 BANP를 보고 시뮬레이션을 어떻게 했는지 참조하는게 좋은 것 같다.
+  -   ~이론적인 bootstrap과의 차이점을 생각해보자.~
+  -   **point reference data를 시뮬레이션 하고(GP), 이를 baysian krigging 했을 때, ML로 krigging 했을 떄, NeuBoots를 이용해서 했을 때를 실험적으로 비교하자.**
+  -   NeuBoots를 이용할 때는 BANP를 보고 시뮬레이션을 어떻게 했는지 참조하는게 좋은 것 같다. -> 여기서는 std를 같이 추정하기 때문에 가능하다. 
+  -   이후, SNGP라는게 뭔지도 공부해보자 .(https://www.tensorflow.org/tutorials/understanding/sngp?hl=ko)
 ---  
 - 지금 해야할 일 
   -  ~TEST 과정 metric 확인~ 
