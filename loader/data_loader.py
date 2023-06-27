@@ -136,7 +136,8 @@ class BaseDataLoader(object):
               'custom' : lambda: self._load_custom(),
               'custom2' : lambda: self._load_custom2(),
               'custom3' : lambda: self._load_custom3(),
-              'sin' : lambda: self._load_sin()}
+              'sin' : lambda: self._load_sin(),
+              'SP' : lambda: self._load_SP()}
         try:
             _dataset = _d[dataset]()
             return _dataset
@@ -275,6 +276,41 @@ class BaseDataLoader(object):
         print(train_X.size())
         print(train_y.size())
         return {'train': trainset, 'test': testset}
+    
+    def _load_SP(self):
+        '''
+        2D-Gaussian process example
+        '''
+        size = 10
+        x1val = torch.arange(0,size,1).type(torch.float64)
+        x2val = torch.arange(0,size,1).type(torch.float64)
+
+        print(x1val.size())
+        print(x2val.size())
+
+        x1val = torch.unsqueeze(x1val,0)
+        x2val = torch.unsqueeze(x2val,1)
+
+        dist = (x1val - x2val)**2
+        l1 = torch.max(dist) ## hyper parameter
+        kernel = torch.exp(-0.5*dist/l1)
+        kernel += (2e-3)*torch.eye(size)
+        print(x1val.size())
+        print(x2val.size())
+        print(dist.size())
+
+        # Calculate Cholesky, using double precision for better stability:
+        cholesky = torch.linalg.cholesky(kernel).type(torch.float32)
+
+        # Sample a curve
+        # [batch_size, y_size, num_total_points, 1]
+        yval = torch.matmul(
+            cholesky,
+            torch.normal(0,1,size=(size,1)))
+        
+        return {'train': trainset, 'test': testset}
+    
+    
     
     
     def _load_mnist(self):
