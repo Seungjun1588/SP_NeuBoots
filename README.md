@@ -8,6 +8,8 @@
   -   **point reference data를 시뮬레이션 하고(GP), 이를 baysian krigging 했을 때, ML로 krigging 했을 떄, NeuBoots를 이용해서 했을 때를 실험적으로 비교하자.**
   -   NeuBoots를 이용할 때는 BANP를 보고 시뮬레이션을 어떻게 했는지 참조하는게 좋은 것 같다. -> 여기서는 std를 같이 추정하기 때문에 가능하다. 
   -   이후, SNGP라는게 뭔지도 공부해보자 .(https://www.tensorflow.org/tutorials/understanding/sngp?hl=ko)
+  -   krigging 하는 문제로 접근해볼까? x를 랜덤으로 일부만 주는 형태로 한다던지..(지금은 x가 fixed 되어있음.)
+  -   구름 등에 의해서 가려진 상황을 가정, 시뮬레이션 데이터셋을 만드는 것은 가능할 것으로 보인다. 
 ---  
 - 지금 해야할 일 
   -  ~TEST 과정 metric 확인~ 
