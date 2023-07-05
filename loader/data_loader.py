@@ -281,60 +281,55 @@ class BaseDataLoader(object):
         '''
         2D-Gaussian process example
         '''
-        n_train= 100000
-        n_test = 2000
+        n_train= 10000
+        n_test = 200
+        num_total = 40
+        # max_context = 50          
+        # num_context = max_context  
+
+        l1 = 0.6
+        sigma= 1.0
+        beta = torch.tensor([1.,1.])
+        #-----------------------------------------------------------#
+        # trainset 
+        # generate random points
+        # generate the obs values 
+
+        train_mesh = torch.randn((n_train,num_total,2))*4 - 2
+        train_X = torch.rand((n_train,num_total,2))
+
+        # make gaussian kernel
+        kernel = (sigma**2)*(torch.exp(-0.5*torch.cdist(train_mesh,train_mesh)/l1))
+        kernel += ((2e-2)**2)*torch.eye(num_total)
+
+        # make yval that follows the gaussian process.
+        cholesky = torch.linalg.cholesky(kernel)
+        train_y = torch.mm(train_X,beta) + torch.bmm(cholesky,torch.normal(0,1,size=(n_train,num_total,1)))
         
-        size = 10
-        # 여기서 xval 자체를 unif로 생성해서 x_train으로 이용?
-        x1val = torch.arange(0,size,1).type(torch.float64)
-        x2val = torch.arange(0,size,1).type(torch.float64)
+        #-----------------------------------------------------------#
+        # testset 
+        # generate random points
+        test_mesh = torch.randn((n_test,num_total,2))*4 - 2
+        test_X = torch.rand((n_test,num_total,2))
 
-        print(x1val.size())
-        print(x2val.size())
-        # x1val과 x2val을 이용해서 grid를 만들어야 함 -> 10*10 = 100
-        # grid = ??
+        # make gaussian kernel
+        kernel = (sigma**2)*(torch.exp(-0.5*torch.cdist(test_mesh,test_mesh)/l1))
+        kernel += ((2e-2)**2)*torch.eye(num_total)
 
-        grid0 = torch.unsqueeze(grid,0)
-        grid1 = torch.unsqueeze(grid,1)
-
-        dist = (grid0 - grid1)**2
-        l1 = torch.max(dist) ## hyper parameter
-        kernel = torch.exp(-0.5*dist/l1)
-        kernel += (2e-3)*torch.eye(size)
-        print(x1val.size())
-        print(x2val.size())
-        print(dist.size())
-
-        # Calculate Cholesky, using double precision for better stability:
-        cholesky = torch.linalg.cholesky(kernel).type(torch.float32)
-
-        # Sample a curve
-        # [batch_size, y_size, num_total_points, 1]
-        trainset = torch.zeros([n_train,size*size])
-        # 이거 for문으로 하는거보다 broadcast으로 해볼 수 있을 듯 하다. 1축 기준으로 cholesky가 반복되게 끔 만들어보자. 
-        for i in range(n_train):
-            yval = torch.matmul(
-                cholesky,
-                torch.normal(0,1,size=(size,1)))
-            trainset[n_train*i,] = yval
+        # make yval that follows the gaussian process.
+        cholesky = torch.linalg.cholesky(kernel)
+        test_y = torch.mm(test_X,beta) + torch.bmm(cholesky,torch.normal(0,1,size=(n_test,num_total,1)))
         
-        # 여기도 마찬가지 
-        testset = torch.zeros([n_test,size*size])
-        for j in range(n_test):
-            yval2 = torch.matmul(
-                cholesky,
-                torch.normal(0,1,size(size,1)))
-            testset[n_test*j,] = yval2
+        # normalize
+        train_X = (train_X - train_X.mean())/train_X.std()
+        test_X = (test_X - test_X.mean())/test_X.std()
         
-        # 랜덤으로 받은 input으로 xy를 생성해서 넣어보자. 
         trainset = CustomDataset(train_X,train_y)
         testset = CustomDataset(test_X,test_y)
 
-        print(trainset.size())
-        print(testset.size())
+        print(train_X.size())
+        print(train_y.size())
         return {'train': trainset, 'test': testset}
-    
-    
     
     
     def _load_mnist(self):

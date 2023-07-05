@@ -30,7 +30,8 @@ MODEL_DICT = {'mlp': [None, 'none', 28 * 28 * 3],
               'deeplabv3_res101': [models.resnet.resnet101, 'layer4', 2048],
               'Reg_model': [Reg_model,'none',100],
               'Reg_model2': [Reg_model2,'none',1],
-              'Reg_model3': [Reg_model3,'none',1]}
+              'Reg_model3': [Reg_model3,'none',1],
+              'Reg_model4': [Reg_model4,'none',2]}
 
 
 def _get_model(name, model_type, num_classes, dropout_rate=0.):

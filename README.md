@@ -10,6 +10,8 @@
   -   이후, SNGP라는게 뭔지도 공부해보자 .(https://www.tensorflow.org/tutorials/understanding/sngp?hl=ko)
   -   krigging 하는 문제로 접근해볼까? x를 랜덤으로 일부만 주는 형태로 한다던지..(지금은 x가 fixed 되어있음.)
   -   구름 등에 의해서 가려진 상황을 가정, 시뮬레이션 데이터셋을 만드는 것은 가능할 것으로 보인다. 
+  -   조금 더 현실적으로 만들려면, context 데이터의 개수도 랜덤으로 받게 만들어야 하는데 이는 batch 단위의 연산이 안되는 문제가 있다. 일단 이는 패스하고 해보자. 
+  -  gaussian 예제뿐 아니라, non-gaussian에도 적용해볼 수 있을 듯 하다 
 ---  
 - 지금 해야할 일 
   -  ~TEST 과정 metric 확인~ 
@@ -52,6 +54,7 @@ test_y = torch.mm(test_X,beta)
 - 시뮬레이션 세팅 바꾸는 법(까먹지 않게 기록)
   - data_loader.py에서 시뮬레이션 코드를 변경.
   - __init__.py에서 dict에서 해당 모델의 값을 변경.
+  - models/regression.py에서 모델의 구조를 변경.
 
 ---
 - yaml 파일 세팅
