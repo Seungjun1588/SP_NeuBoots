@@ -296,7 +296,7 @@ class BaseDataLoader(object):
         # generate the obs values 
 
         train_mesh = torch.randn((n_train,num_total,2))*4 - 2
-        train_X = torch.rand((n_train,num_total,2))
+        train_X = torch.rand((n_train*num_total,2))
 
         # make gaussian kernel
         kernel = (sigma**2)*(torch.exp(-0.5*torch.cdist(train_mesh,train_mesh)/l1))
@@ -304,13 +304,13 @@ class BaseDataLoader(object):
 
         # make yval that follows the gaussian process.
         cholesky = torch.linalg.cholesky(kernel)
-        train_y = torch.mm(train_X,beta) + torch.bmm(cholesky,torch.normal(0,1,size=(n_train,num_total,1)))
+        train_y = (train_X @ beta).unsqueeze(1) + torch.bmm(cholesky,torch.normal(0,1,size=(n_train,num_total,1))).reshape(-1,1)
         
         #-----------------------------------------------------------#
         # testset 
         # generate random points
         test_mesh = torch.randn((n_test,num_total,2))*4 - 2
-        test_X = torch.rand((n_test,num_total,2))
+        test_X = torch.rand((n_test*num_total,2))
 
         # make gaussian kernel
         kernel = (sigma**2)*(torch.exp(-0.5*torch.cdist(test_mesh,test_mesh)/l1))
@@ -318,7 +318,7 @@ class BaseDataLoader(object):
 
         # make yval that follows the gaussian process.
         cholesky = torch.linalg.cholesky(kernel)
-        test_y = torch.mm(test_X,beta) + torch.bmm(cholesky,torch.normal(0,1,size=(n_test,num_total,1)))
+        test_y = (test_X @ beta).unsqueeze(1) + torch.bmm(cholesky,torch.normal(0,1,size=(n_test,num_total,1))).reshape(-1,1)
         
         # normalize
         train_X = (train_X - train_X.mean())/train_X.std()

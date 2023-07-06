@@ -8,7 +8,7 @@ setup:
   cpus: 2
   gpus: "0"
   seed: 0
-  num_epoch: 20
+  num_epoch: 25
   phase: train
   epoch_th: -1
   num_mc: 20 
