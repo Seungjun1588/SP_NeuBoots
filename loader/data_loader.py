@@ -283,7 +283,7 @@ class BaseDataLoader(object):
         '''
         n_train= 10000
         n_test = 200
-        num_total = 40
+        num_total = 100 # size*size
         # max_context = 50          
         # num_context = max_context  
 
