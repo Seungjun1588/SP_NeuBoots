@@ -4,11 +4,11 @@ path:
 
 setup:
   model_type: nbs
-  batch_size: 10
+  batch_size: 100
   cpus: 2
   gpus: "0"
   seed: 0
-  num_epoch: 20
+  num_epoch: 5
   phase: train
   epoch_th: -1
   num_mc: 20 
