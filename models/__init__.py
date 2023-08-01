@@ -31,7 +31,7 @@ MODEL_DICT = {'mlp': [None, 'none', 28 * 28 * 3],
               'Reg_model': [Reg_model,'none',100],
               'Reg_model2': [Reg_model2,'none',1],
               'Reg_model3': [Reg_model3,'none',1],
-              'Reg_model4': [Reg_model4,'none',2]}
+              'Reg_model4': [Reg_model4,'none',4]}
 
 
 def _get_model(name, model_type, num_classes, dropout_rate=0.):

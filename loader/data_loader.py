@@ -320,6 +320,12 @@ class BaseDataLoader(object):
         cholesky = torch.linalg.cholesky(kernel)
         test_y = (test_X @ beta).unsqueeze(1) + torch.bmm(cholesky,torch.normal(0,1,size=(n_test,num_total,1))).reshape(-1,1)
         
+
+        # concat(location + covariate)
+        train_X = torch.cat((train_mesh.reshape(-1,2),train_X),dim=1)
+        test_X = torch.cat((test_mesh.reshape(-1,2),test_X),dim=1)
+
+
         # normalize
         train_X = (train_X - train_X.mean())/train_X.std()
         test_X = (test_X - test_X.mean())/test_X.std()
